@@ -1,0 +1,137 @@
+/**
+ * Global design tokens. Every color/radius/shadow in the app resolves
+ * through one of these variables -- components never hardcode values.
+ * :root holds light-mode values; [data-theme="dark"] overrides the
+ * themable subset. Brand-panel-only tokens (surface-dark-from/to,
+ * text-inverse*) stay constant across both themes on purpose.
+ */
+:root {
+  /* Brand */
+  --primary: #9a1b3e;
+  --primary-hover: #7c1633;
+  --primary-contrast: #ffffff;
+  --primary-soft: rgba(154, 27, 62, 0.12);
+
+  /* Surfaces */
+  --background: #f3f4f8;
+  --surface: #ffffff;
+  --surface-dark-from: #0b0a1f;
+  --surface-dark-to: #171340;
+  --surface-hover: #171340;
+
+  /* Text */
+  --text: #14142b;
+  --text-secondary: #6b7089;
+  --text-inverse: #f7f7fb;
+  --text-inverse-secondary: #b9bad6;
+  --text-inverse-tetriary: #f7f7fb;
+
+  /* Borders / states */
+  --border: #e3e4ee;
+  --border-hover: #c9cbe0;
+  --border-focus: var(--primary);
+  --error: #e6455d;
+  --success: #29b37b;
+  --success-soft: rgba(41, 179, 123, 0.12);
+  --error-soft: rgba(230, 69, 93, 0.12);
+
+  /* Focus / overlay */
+  --shadow-focus: 0 0 0 4px rgba(154, 27, 62, 0.14);
+  --shadow-focus-error: 0 0 0 4px rgba(230, 69, 93, 0.12);
+  --spinner-track: rgba(255, 255, 255, 0.35);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 2px rgba(20, 20, 43, 0.06);
+  --shadow-md: 0 8px 24px rgba(20, 20, 43, 0.08);
+  --shadow-lg: 0 24px 64px rgba(11, 10, 31, 0.35);
+
+  /* Motion */
+  --transition: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Type scale */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-3xl: 2.5rem;
+}
+
+/**
+ * Dark theme overrides. Only themable surface tokens are redefined --
+ * --surface-dark-from/to and --text-inverse* stay constant since the
+ * MarketingPanel is a fixed dark brand panel in both modes.
+ */
+[data-theme="dark"] {
+  --primary: #d94569;
+  --primary-hover: #c23458;
+  --primary-soft: rgba(217, 69, 105, 0.16);
+
+  --background: #0f0f1a;
+  --surface: #17172b;
+  --surface-hover: #e5e6eb;
+
+  --text: #f2f2f7;
+  --text-secondary: #9a9cc0;
+  --text-inverse-tetriary: #080804;
+  --text-inverse: #f7f7fb;
+
+  --border: #2a2a45;
+  --border-hover: #3c3c5c;
+  --error: #ff6b81;
+  --success: #3ddc97;
+  --success-soft: rgba(61, 220, 151, 0.16);
+  --error-soft: rgba(255, 107, 129, 0.16);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.6);
+
+  --shadow-focus: 0 0 0 4px rgba(217, 69, 105, 0.22);
+  --shadow-focus-error: 0 0 0 4px rgba(255, 107, 129, 0.25);
+  --spinner-track: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--background);
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  /* outline: 2px solid var(--primary); */
+  outline-offset: 2px;
+}

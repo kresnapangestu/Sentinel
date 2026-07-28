@@ -1,308 +1,113 @@
-# Sentinel
+# Sentinel — Login + Dashboard
 
-> Web-based Telecommunication KPI Monitoring Dashboard with Early Anomaly Detection using Isolation Forest and Z-Score.
+A Next.js (App Router) + TypeScript app: a Sentinel-branded login page and
+a SENTINEL-style analytics dashboard, sharing one feature-based + atomic
+design system, Tailwind CSS, dark mode, and Apache ECharts.
 
-![Next.js](https://img.shields.io/badge/Next.js-15-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![Python](https://img.shields.io/badge/Python-3.12-yellow)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green)
-![License](https://img.shields.io/badge/License-MIT-orange)
-
----
-
-## Overview
-
-**KPI Sentinel** is a web-based dashboard application developed as part of an undergraduate research project entitled:
-
-> **Comparative Analysis of Isolation Forest and Z-Score Methods for Early Anomaly Detection on a Web-Based Telecommunication KPI Monitoring Dashboard**
-
-The application is designed to monitor telecommunication Key Performance Indicators (KPIs), detect abnormal behavior at an early stage, and compare the performance of two anomaly detection approaches:
-
-- Isolation Forest
-- Z-Score
-
-The primary goal is to assist network engineers and decision makers in identifying abnormal KPI values before they impact network quality.
-
----
-
-## Research Objectives
-
-This application aims to:
-
-- Monitor Telecommunication KPI data in real time
-- Detect anomalies using statistical and machine learning approaches
-- Compare the performance of Isolation Forest and Z-Score
-- Provide interactive dashboard visualization
-- Generate early warning notifications
-- Support anomaly analysis through historical KPI trends
-
----
-
-## Features
-
-### Dashboard
-
-- KPI Overview
-- Network Health Summary
-- Interactive Charts
-- Historical KPI Trends
-- Live KPI Monitoring
-
-### Anomaly Detection
-
-- Isolation Forest Detection
-- Z-Score Detection
-- Early Warning Alert
-- Severity Classification
-- Anomaly Timeline
-
-### Comparison
-
-- Isolation Forest vs Z-Score
-- Detection Accuracy
-- Precision
-- Recall
-- F1-Score
-- Processing Time Comparison
-
-### Data Management
-
-- KPI Dataset Management
-- CSV Import
-- Data Filtering
-- Search
-- Export Detection Results
-
----
-
-## Technology Stack
-
-### Frontend
-
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- Zustand
-- TanStack Query
-- Recharts
-
-### Backend
-
-- Python
-- FastAPI
-- Scikit-Learn
-- NumPy
-- Pandas
-
-### Database
-
-- PostgreSQL
-
----
-
-## System Architecture
-
-```
-                 KPI Dataset
-
-                      │
-
-                      ▼
-
-          Python FastAPI Backend
-
-      ┌────────────────────────────┐
-
-      │                            │
-
-      ▼                            ▼
-
-Isolation Forest              Z-Score
-
-      │                            │
-
-      └──────────────┬─────────────┘
-
-                     ▼
-
-           Anomaly Detection API
-
-                     ▼
-
-        Next.js Dashboard (Frontend)
-
-                     ▼
-
-      Charts • Tables • Alerts • Reports
-```
-
----
-
-## Project Structure
-
-```
-src/
-
-├── app/
-├── components/
-│   ├── charts/
-│   ├── dashboard/
-│   ├── tables/
-│   ├── ui/
-│   └── common/
-│
-├── features/
-│   ├── dashboard/
-│   ├── anomaly/
-│   ├── comparison/
-│   └── kpi/
-│
-├── services/
-├── hooks/
-├── stores/
-├── lib/
-├── utils/
-├── constants/
-├── types/
-└── providers/
-```
-
----
-
-## Dashboard Modules
-
-- Dashboard
-- KPI Monitoring
-- Anomaly Detection
-- Comparison Analysis
-- Alert History
-- Dataset Management
-- Settings
-
----
-
-## Detection Workflow
-
-1. Import KPI dataset
-2. Data preprocessing
-3. KPI normalization
-4. Isolation Forest prediction
-5. Z-Score calculation
-6. Compare detection results
-7. Visualize anomalies
-8. Generate dashboard alerts
-
----
-
-## Evaluation Metrics
-
-The comparison between Isolation Forest and Z-Score includes:
-
-- Accuracy
-- Precision
-- Recall
-- F1 Score
-- Detection Time
-- Number of Detected Anomalies
-
----
-
-## Future Improvements
-
-- Real-time streaming integration
-- Kafka message queue
-- Time-series forecasting
-- Auto threshold optimization
-- Email notification
-- Telegram alert
-- Role-based authentication
-- Dark mode
-
----
-
-## Installation
-
-Clone repository
-
-```bash
-git clone https://github.com/yourusername/kpi-sentinel.git
-```
-
-Go to project
-
-```bash
-cd kpi-sentinel
-```
-
-Install dependencies
+## Getting started
 
 ```bash
 npm install
-```
-
-Run development server
-
-```bash
 npm run dev
 ```
 
-Open
+Visit `http://localhost:3000` (redirects to `/login`). Any email + an
+8+ character password passes validation and navigates to `/dashboard`
+(no backend yet — see Authentication below).
+
+## Architecture
 
 ```
-http://localhost:3000
+src/
+├── app/
+│   ├── layout.tsx          # ThemeProvider + no-flash script + global CSS
+│   ├── page.tsx             # redirects to /login
+│   ├── login/               # login route
+│   └── dashboard/           # dashboard route
+├── features/
+│   ├── auth/                 # login-specific components/hooks/schema/service
+│   └── dashboard/             # dashboard-specific components/hooks/services/constants
+├── components/
+│   ├── atoms/                # Button, Input, Checkbox, Label, Typography,
+│   │                          IconButton, Card, Badge, Avatar
+│   ├── molecules/             # FormField, PasswordInput, CheckboxField,
+│   │                          ThemeToggle, EChart
+│   └── templates/             # AuthTemplate, DashboardTemplate
+├── lib/                       # ThemeProvider, theme.ts (cross-cutting infra)
+├── hooks/                     # useTheme (cross-feature hook)
+├── utils/                     # cn() classname combiner
+└── styles/variables.css       # every design token, light + dark
 ```
 
----
+Feature-based + Atomic Design, unchanged from the original login page:
+generic/reusable UI lives in `components/`, anything feature-specific
+lives inside that feature's own folder, and nothing in `components/`
+knows about auth or dashboard domain logic.
 
-## Backend
+## Styling
 
-```bash
-cd backend
+Tailwind CSS utility classes only — no CSS Modules, no UI library.
+Every Tailwind color/radius/shadow/font-size resolves to a CSS variable
+in `src/styles/variables.css` (see `tailwind.config.ts`), so light/dark
+theming and the maroon rebrand both happen in one file.
 
-pip install -r requirements.txt
+## Theme (dark mode)
 
-uvicorn main:app --reload
-```
+Unchanged from the earlier dark-mode pass: `ThemeProvider` + `useTheme`
 
----
+- `ThemeToggle`, `data-theme="light|dark"` on `<html>`, persisted to
+  `localStorage`, defaults to system preference, and a blocking inline
+  script in the root layout prevents a flash of the wrong theme.
 
-## Dataset
+## Authentication (mocked)
 
-The application accepts KPI datasets in CSV format.
+`features/auth/services/auth.service.ts` exposes a `login()` that
+returns a mocked Promise. `useLogin` wires React Hook Form + Zod
+(`loginSchema`) to it: once validation passes, `authService.login()`
+resolves (no server exists to reject it) and `useLogin` calls
+`router.push("/dashboard")`. Swapping in a real API is a one-file change
+to `auth.service.ts` — nothing above that layer needs to change.
 
-Example KPI:
+## Dashboard
 
-- Availability
-- Accessibility
-- Retainability
-- Integrity
-- Call Drop Rate
-- Call Setup Success Rate (CSSR)
-- Handover Success Rate
-- Throughput
-- Latency
-- Packet Loss
+`features/dashboard` mirrors the same pattern:
 
----
+- **`services/dashboard.service.ts`** — the only place mock data is
+  wrapped in Promises; every fetcher is a seam for a future API.
+- **`constants/dashboard.constants.ts`** — every hardcoded value (nav
+  items, stat card numbers, traffic series, help links, pricing) lives
+  here, not inside components.
+- **`services/chart-options.service.ts`** — pure ECharts `EChartsOption`
+  builders, isolated from React entirely. Components never construct
+  chart config inline.
+- **`components/`** — `Sidebar`, `Topbar`, `ProxyTabs`, `StatCard`,
+  `TrafficChart`, `PackageInfoCard`, `SecurityCard`, `PromoCard`,
+  `CdkRedeemCard`, `HelpCenterCard`, `PricingCard`, and `DashboardView`
+  (the page-level composition, including the mobile sidebar drawer).
+- **`components/Icon`** — a single SVG icon registry keyed by `IconKey`,
+  so every icon in the sidebar/topbar/cards stays visually consistent.
 
-## Research Contribution
+Charts render through `components/molecules/EChart`, a thin wrapper that
+is the _only_ place the `echarts` package is imported — chart
+configuration (colors, series, tooltips) stays entirely in
+`chart-options.service.ts`.
 
-This project contributes to the comparative evaluation of statistical and machine learning methods for early anomaly detection in telecommunication KPI monitoring systems, providing practical insights into the strengths and limitations of Isolation Forest and Z-Score for operational dashboard environments.
+## Key decisions
 
----
-
-## License
-
-MIT License
-
----
-
-## Author
-
-**Mohammad Iqbal Pangestu**
-
-Developer
-
-Research Project — Bachelor of Informatics Engineering
+- **Button's `size`/`fullWidth`/`variant` props**, not className
+  overrides, control layout and color. Tailwind utility classes of the
+  same CSS property don't reliably cascade based on `className` string
+  order (source order is determined by Tailwind's build, not usage
+  order), so anywhere two conflicting utilities might apply, the
+  component exposes a real prop instead.
+- **`inverted` Button variant** exists specifically for buttons placed on
+  colored/gradient surfaces (e.g. `PromoCard`'s "Try It Free"), for the
+  same reason.
+- **ECharts colors are resolved hex/rgba, not CSS `var()`.** ECharts
+  renders to canvas, so `chart-options.service.ts` mirrors
+  `variables.css`'s light/dark values directly; components re-run the
+  builder when `theme` changes via `useTheme`.
+- **`DashboardTemplate`** only owns the sidebar/topbar/content shell —
+  no proxy or auth-specific knowledge — so it's reusable for any future
+  authenticated page. The mobile nav drawer lives in `DashboardView`
+  instead, since it needs page-level open/close state.
