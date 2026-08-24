@@ -12,9 +12,9 @@ export default function LoginPage() {
   return (
     <AuthTemplate marketingSlot={<MarketingPanel />}>
       <header className="mb-6 flex flex-col gap-2">
-        <Typography variant="h1">Welcome Back!</Typography>
+        <Typography variant="h1">Sign in</Typography>
         <Typography variant="bodySmall" as="p">
-          Sign in to your account
+          Access the SENTINEL KPI monitoring dashboard.
         </Typography>
       </header>
       <LoginForm />

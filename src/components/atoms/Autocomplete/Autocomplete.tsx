@@ -8,17 +8,19 @@ import {
 import { useAutocomplete } from "./useAutocomplete";
 import { ChevronDown } from "lucide-react";
 
-export default function Autocomplete({
-  options,
-  value,
-  onChange,
-  placeholder = "Select...",
-  clearable = true,
-  searchable = true,
-  disabled,
-  loading,
-  className,
-}: AutocompleteProps) {
+export default function Autocomplete(props: AutocompleteProps) {
+  const {
+    options,
+    value,
+    onChange,
+    placeholder = "Select...",
+    clearable = true,
+    searchable = true,
+    disabled,
+    loading,
+    className,
+  } = props;
+  const multiple = props.multiple ?? false;
   const {
     rootRef,
 
@@ -33,20 +35,51 @@ export default function Autocomplete({
     highlighted,
     setHighlighted,
 
-    selected,
+    selectedOptions,
   } = useAutocomplete(options, value);
 
   useEffect(() => {
     setHighlighted(0);
-  }, [query]);
+  }, [query, setHighlighted]);
+
+  function isSelected(optionValue: string) {
+    return selectedOptions.some((o) => o.value === optionValue);
+  }
 
   function choose(option: Option) {
-    onChange?.(option.value);
+    if (multiple) {
+      const next = isSelected(option.value)
+        ? selectedOptions
+            .filter((o) => o.value !== option.value)
+            .map((o) => o.value)
+        : [...selectedOptions.map((o) => o.value), option.value];
+
+      (onChange as ((value: string[]) => void) | undefined)?.(next);
+      return;
+    }
+
+    (onChange as ((value: string) => void) | undefined)?.(option.value);
 
     setQuery("");
 
     setOpen(false);
   }
+
+  function clear(e: React.MouseEvent) {
+    e.stopPropagation();
+
+    if (multiple) {
+      (onChange as ((value: string[]) => void) | undefined)?.([]);
+    } else {
+      (onChange as ((value: string) => void) | undefined)?.("");
+    }
+  }
+
+  const displayLabel = multiple
+    ? selectedOptions.length
+      ? `${selectedOptions.length} selected`
+      : ""
+    : (selectedOptions[0]?.label ?? "");
 
   return (
     <div ref={rootRef} className={cn("relative", className)}>
@@ -59,7 +92,7 @@ export default function Autocomplete({
       >
         {searchable ? (
           <input
-            value={open ? query : (selected?.label ?? "")}
+            value={open ? query : displayLabel}
             onChange={(e) => {
               setQuery(e.target.value);
 
@@ -96,17 +129,13 @@ export default function Autocomplete({
           />
         ) : (
           <span className="flex-1 outline-none">
-            {selected?.label ?? placeholder}
+            {displayLabel || placeholder}
           </span>
         )}
 
-        {clearable && selected && (
+        {clearable && selectedOptions.length > 0 && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-
-              onChange?.("");
-            }}
+            onClick={clear}
             className="mr-2 text-sm opacity-60 hover:opacity-100"
           >
             ×
@@ -137,8 +166,9 @@ export default function Autocomplete({
               <AutocompleteOption
                 key={option.value}
                 option={option}
-                selected={value === option.value}
+                selected={isSelected(option.value)}
                 highlighted={highlighted === index}
+                multiple={multiple}
                 onClick={() => choose(option)}
               />
             ))}

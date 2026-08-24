@@ -1,32 +1,37 @@
-import type { LoginCredentials, LoginResult } from "../types";
+import { apiGet, apiPost } from "@/lib/api-client";
+import type { AuthenticatedUser, LoginCredentials, LoginResult } from "../types";
 
 /**
  * Auth service abstraction. Every consumer depends on this interface, not
- * on the mocked implementation below -- swapping in a real API client
- * later only means changing loginRequest's internals.
+ * on the implementation below.
+ *
+ * The session itself is an HttpOnly cookie the gateway sets on the login
+ * response -- this client never sees or stores a token. `credentials`
+ * is destructured (not forwarded) because "remember me" has no backend
+ * concept yet; keeping it out of the request body avoids implying a
+ * feature that isn't there.
  */
 export interface AuthService {
   login(credentials: LoginCredentials): Promise<LoginResult>;
-}
-
-const MOCK_LATENCY_MS = 600;
-
-async function loginRequest(
-  credentials: LoginCredentials,
-): Promise<LoginResult> {
-  // TODO: replace with a real fetch/axios call to the auth API endpoint.
-  await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY_MS));
-
-  return {
-    user: {
-      id: "mock-user-id",
-      email: credentials.email,
-      name: credentials.email.split("@")[0],
-    },
-    token: "mock-jwt-token",
-  };
+  logout(): Promise<void>;
+  /** Current session's user, or null if not authenticated. */
+  me(): Promise<AuthenticatedUser | null>;
 }
 
 export const authService: AuthService = {
-  login: loginRequest,
+  async login({ email, password }: LoginCredentials): Promise<LoginResult> {
+    return apiPost<LoginResult>("/auth/login", { email, password });
+  },
+
+  async logout(): Promise<void> {
+    await apiPost<{ success: true }>("/auth/logout", {});
+  },
+
+  async me(): Promise<AuthenticatedUser | null> {
+    try {
+      return await apiGet<AuthenticatedUser>("/users/me");
+    } catch {
+      return null;
+    }
+  },
 };

@@ -1,7 +1,8 @@
+/** Mirrors nest-gateway/src/modules/user/domain/user.model.ts's `User`. */
 export interface AuthenticatedUser {
   id: string;
   email: string;
-  name: string;
+  createdAt: string;
 }
 
 export interface LoginCredentials {
@@ -12,5 +13,4 @@ export interface LoginCredentials {
 
 export interface LoginResult {
   user: AuthenticatedUser;
-  token: string;
 }

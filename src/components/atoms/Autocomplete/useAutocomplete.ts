@@ -3,7 +3,7 @@ import { AutocompleteOption } from "./Autocomplete.types";
 
 export function useAutocomplete(
   options: readonly AutocompleteOption[],
-  value?: string,
+  value: string | string[] | undefined,
 ) {
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +33,12 @@ export function useAutocomplete(
     );
   }, [options, query]);
 
-  const selected = options.find((x) => x.value === value);
+  // `value` is the dependency, not the derived array: rebuilding the array on
+  // every render would defeat the memo, since a fresh array is never ===.
+  const selectedOptions = useMemo(() => {
+    const selectedValues = Array.isArray(value) ? value : value ? [value] : [];
+    return options.filter((o) => selectedValues.includes(o.value));
+  }, [options, value]);
 
   return {
     rootRef,
@@ -49,6 +54,6 @@ export function useAutocomplete(
 
     filtered,
 
-    selected,
+    selectedOptions,
   };
 }

@@ -111,6 +111,32 @@
   --spinner-track: rgba(0, 0, 0, 0.35);
 }
 
+/**
+ * Motion primitives. Kept minimal and purposeful: an overlay fade, a short
+ * dialog lift, and a slow pulse for the "refreshing" indicator. All are
+ * opt-in via Tailwind's `motion-safe:` variant, so reduced-motion users get
+ * static UI.
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 * {
   box-sizing: border-box;
 }

@@ -7,12 +7,8 @@ export interface AutocompleteOption {
   icon?: ReactNode;
 }
 
-export interface AutocompleteProps {
+interface AutocompleteBaseProps {
   options: readonly AutocompleteOption[];
-
-  value?: string;
-
-  onChange?: (value: string) => void;
 
   placeholder?: string;
 
@@ -26,3 +22,19 @@ export interface AutocompleteProps {
 
   className?: string;
 }
+
+export interface AutocompleteSingleProps extends AutocompleteBaseProps {
+  multiple?: false;
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export interface AutocompleteMultipleProps extends AutocompleteBaseProps {
+  multiple: true;
+  value?: string[];
+  onChange?: (value: string[]) => void;
+}
+
+export type AutocompleteProps =
+  | AutocompleteSingleProps
+  | AutocompleteMultipleProps;

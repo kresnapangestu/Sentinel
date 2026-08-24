@@ -1,0 +1,1 @@
+export { KpiMonitoringView } from "./KpiMonitoringView";

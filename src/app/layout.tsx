@@ -6,8 +6,9 @@ import { ThemeProvider } from "@/lib/ThemeProvider";
 import { THEME_ATTRIBUTE, THEME_STORAGE_KEY } from "@/lib/theme";
 
 export const metadata: Metadata = {
-  title: "Sentinel",
-  description: "Powerful email marketing software.",
+  title: "SENTINEL",
+  description:
+    "Anomaly detection for telecommunication network KPIs, using Z-Score (univariate) and Isolation Forest (multivariate).",
 };
 
 // Runs synchronously before first paint, so the correct theme is on the

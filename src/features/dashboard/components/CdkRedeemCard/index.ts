@@ -1,1 +1,0 @@
-export { CdkRedeemCard } from "./CdkRedeemCard";
